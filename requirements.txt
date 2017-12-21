@@ -1,0 +1,7 @@
+beautifulsoup4==4.6.0
+bs4==0.0.1
+configobj==5.0.6
+docopt==0.6.2
+-e git+https://github.com/lawsofthought/ernstproject.git@599e41a3534c91b77128060a089403ff185387fe#egg=ernst
+six==1.11.0
+SQLAlchemy==1.1.15
