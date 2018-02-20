@@ -26,7 +26,9 @@ from .. import conf
 
 #================================ End Imports ================================
 
-def process_completed_marksheets(completed_marksheets_dirname):
+def process_completed_marksheets(completed_marksheets_dirname,
+                                 marksheet_fname_pattern=None):
+
 
     '''Return a list of processed and checked marksheets that were found in the
     completed_marksheets_dirname. 
@@ -34,7 +36,9 @@ def process_completed_marksheets(completed_marksheets_dirname):
     '''
 
     completed_marksheets = []
-    for completed_marksheet in list_completed_marksheets(completed_marksheets_dirname):
+    for completed_marksheet\
+            in list_completed_marksheets(completed_marksheets_dirname,
+                                         marksheet_fname_pattern):
         
         try:
             (student_name, 
@@ -50,6 +54,8 @@ def process_completed_marksheets(completed_marksheets_dirname):
             completed_marksheets.append(
                 [student_name, 
                  student_id, 
+                 marker_name,
+                 marker_email,
                  grade, 
                  completed_marksheet['filepath']]
             )
@@ -60,7 +66,8 @@ def process_completed_marksheets(completed_marksheets_dirname):
     return completed_marksheets
 
 
-def list_completed_marksheets(completed_marking_dirname):
+def list_completed_marksheets(completed_marking_dirname,
+                              marksheet_fname_pattern=None):
     
     '''Return a list of (hopefully completed) marksheets from a
     `completed_marking` directory. Marksheets are defined as files that match a
@@ -73,6 +80,13 @@ def list_completed_marksheets(completed_marking_dirname):
     * filepath, the full and absolute path to the file
     '''
 
+    # We need this here because we have changed the default
+    # marksheet_fname_pattern from using commas to using double underscores.
+    # If we want to process old marksheets or new marksheets, we'll need to
+    # change this pattern.
+    if marksheet_fname_pattern is None:
+        marksheet_fname_pattern = conf.marksheet_fname_pattern
+
     def abspath(dirname, fname):
         'Convenience function just to save some typing'
         return os.path.abspath(os.path.join(completed_marking_dirname, fname))
@@ -81,7 +95,7 @@ def list_completed_marksheets(completed_marking_dirname):
     
     for fname in os.listdir(completed_marking_dirname):
         
-        pattern_match = conf.marksheet_fname_pattern.match(fname)
+        pattern_match = marksheet_fname_pattern.match(fname)
         
         if pattern_match: 
 
