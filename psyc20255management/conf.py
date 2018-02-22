@@ -31,7 +31,7 @@ marksheet_template_fname\
 
 # When we create copies of the submitted reports, we will use the following
 # file name template.
-new_report_fname_template = '%s__%s__%s__report%s'
+new_report_fname_template = '%s__%s__report%s'
 
 # Marksheets have the following file name template.
 marksheet_fname_template = '%s__%s__%s__marksheet.docx'
