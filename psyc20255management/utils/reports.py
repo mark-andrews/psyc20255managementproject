@@ -88,7 +88,7 @@ def copy_report(submission_info, new_directory='tmpdir'):
 
     '''
     
-    new_filename = conf.new_report_fname_template % (submission_info['student_name'], 
+    new_filename = conf.new_report_fname_template % (submission_info['student_name'].replace(' ', '_'), 
                                                      submission_info['student_id'],
                                                      submission_info['extension'])
     

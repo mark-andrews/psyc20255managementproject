@@ -34,7 +34,7 @@ marksheet_template_fname\
 new_report_fname_template = '%s__%s__report%s'
 
 # Marksheets have the following file name template.
-marksheet_fname_template = '%s__%s__%s__marksheet.docx'
+marksheet_fname_template = '%s__%s__marksheet.docx'
 # And here's the regex.
 marksheet_fname_pattern = re.compile(r'(.*)__(.*)__(.*)__marksheet.docx')
 
