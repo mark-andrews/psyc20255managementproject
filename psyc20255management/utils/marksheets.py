@@ -191,14 +191,14 @@ class MarksheetModel(object):
  
     #### Class methods ####
     @classmethod
-    def get_marksheet_vital_details(cls, marksheet_filename):
+    def get_marksheet_vital_details(cls, marksheet_filename, sequence_name):
         '''Return the "vital details" of a marksheet.
 
         This function uses the `extract_vital_details` instance method of the
         `MarksheetModel` class.
         '''
 
-        marksheet_model = cls(marksheet_filename)
+        marksheet_model = cls(marksheet_filename, sequence_name)
         return marksheet_model.extract_vital_details()
 
     ###########
