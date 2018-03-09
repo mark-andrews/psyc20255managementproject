@@ -27,6 +27,7 @@ from .. import conf
 #================================ End Imports ================================
 
 def process_completed_marksheets(completed_marksheets_dirname,
+                                 sequence_name='Experimental',
                                  marksheet_fname_pattern=None):
 
 
@@ -45,7 +46,9 @@ def process_completed_marksheets(completed_marksheets_dirname,
              student_id, 
              marker_name, 
              marker_email, 
-             grade) = MarksheetModel.get_marksheet_vital_details(completed_marksheet['filepath'])
+             grade) = MarksheetModel.get_marksheet_vital_details(
+                     document_name=completed_marksheet['filepath'],
+                     sequence_name = sequence_name)
             
             assertEqual(student_name, completed_marksheet['student_name'])
             assertEqual(student_id, completed_marksheet['student_id'])
