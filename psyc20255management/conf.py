@@ -36,7 +36,7 @@ new_report_fname_template = '%s__%s__report%s'
 # Marksheets have the following file name template.
 marksheet_fname_template = '%s__%s__marksheet.docx'
 # And here's the regex.
-marksheet_fname_pattern = re.compile(r'(.*)__(.*)__(.*)__marksheet.docx')
+marksheet_fname_pattern = re.compile(r'(.*)__(.*)__marksheet.docx')
 
 # From the time when we used commas as delimiters.
 legacy_marksheet_fname_pattern = re.compile(r'([^,]*), ([^,]*), marksheet.docx')
