@@ -47,7 +47,7 @@ def process_completed_marksheets(completed_marksheets_dirname,
              marker_name, 
              marker_email, 
              grade) = MarksheetModel.get_marksheet_vital_details(
-                     document_name=completed_marksheet['filepath'],
+                     marksheet_filename=completed_marksheet['filepath'],
                      sequence_name = sequence_name)
             
             assertEqual(student_name, completed_marksheet['student_name'])
@@ -111,6 +111,8 @@ def list_completed_marksheets(completed_marking_dirname,
                          filepath = abspath(completed_marking_dirname, fname)
                          )
                     )
+        else:
+            print('Did not match: %s' % fname)
     
     return completed_marksheets
 
@@ -171,16 +173,19 @@ class MarksheetModel(object):
     student_ID_par_index = 3
     marker_name_par_index = 4
     marker_email_par_index = 5
+    marker_grade_par_index = 6
     
     student_name_label = 'Student name'
     student_ID_label = 'Student ID'
     marker_name_label = 'Marker name'
     marker_email_label = 'Marker email'
+    marker_grade_label = 'Grade'
     
     student_name_pattern = re.compile(r'%s: (.*)$' % student_name_label)
     student_id_pattern = re.compile(r'%s: (.*)$' % student_ID_label)
     marker_name_pattern = re.compile(r'%s: (.*)$' % marker_name_label)
     marker_email_pattern = re.compile(r'%s: (.*)$' % marker_email_label)
+    marker_grade_pattern = re.compile(r'%s: (.*)$' % marker_grade_label)
 
     def __init__(self, document_name, sequence_name='Experimental'):
         
@@ -219,6 +224,7 @@ class MarksheetModel(object):
         assertTrue(self.student_id_pattern.match(P[self.student_ID_par_index]))
         assertTrue(self.marker_name_pattern.match(P[self.marker_name_par_index]))
         assertTrue(self.marker_email_pattern.match(P[self.marker_email_par_index]))
+        assertTrue(self.marker_grade_pattern.match(P[self.marker_grade_par_index]))
         
     def extract_vital_details(self):
 
@@ -233,12 +239,29 @@ class MarksheetModel(object):
         '''
         
         P = self.get_paragraph_contents()
+
+        # This BS is to deal with what happens if someone messes with the
+        # dropdown menu. 
+        try:
+            grade = get_grade_from_marksheet(self.document_name)
+        except AttributeError:
+            print("Probably can't read dropdown in %s." % self.document_name)
+            grade = self.marker_grade_pattern.match(P[self.marker_grade_par_index]).groups()[0]
+                    
+            try:
+                assert grade in conf.grades
+            except:
+                grade = grade.strip().replace('.','').upper()
+
+            assert grade in conf.grades,\
+                'Grade %s not in grades list %s.' % (grade, ' ,'.join(conf.grades))
+
         
-        return (self.student_name_pattern.match(P[2]).groups()[0],
-                self.student_id_pattern.match(P[3]).groups()[0],
-                self.marker_name_pattern.match(P[4]).groups()[0],
-                self.marker_email_pattern.match(P[5]).groups()[0],
-                get_grade_from_marksheet(self.document_name))
+        return (self.student_name_pattern.match(P[self.student_name_par_index]).groups()[0],
+                self.student_id_pattern.match(P[self.student_ID_par_index]).groups()[0],
+                self.marker_name_pattern.match(P[self.marker_name_par_index]).groups()[0],
+                self.marker_email_pattern.match(P[self.marker_email_par_index]).groups()[0],
+                grade)
     
     def make_new_marksheet(self, 
                           student_name,
